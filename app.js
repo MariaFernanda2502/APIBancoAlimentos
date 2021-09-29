@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/admin', administratorRouter);
-app.use('coordinator', coordinatorRouter);
+app.use('/coordinator', coordinatorRouter);
 app.use('/operator', operatorRouter);
 app.use('/warehouseman', warehousemanRouter);
 
