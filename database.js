@@ -23,7 +23,7 @@ const DB = new Sequelize(
     {
         dialect: 'mssql',
         host: process.env.DB_HOST,
-        port: 1433,
+        port: 3306,
         protocol: 'tcp',
         dialectOptions: {
             encrypt: true,

@@ -7,7 +7,7 @@ module.exports = (DB, type) => {
             autoIncrement: true,
         },
         determinante: {
-            type: type.INTERGER,
+            type: type.INTEGER,
         },
         cadena: {
             type: type.STRING,

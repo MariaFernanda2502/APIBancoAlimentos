@@ -2,8 +2,6 @@ const express = require('express');
 const { Route, Store, donation, delivery_donation, spontaneousDonation, delivery_spontaneousDonation, DB, Donation } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 require('dotenv').config;
 
 // ------------------- TIENDAS PENDIENTES --------------------
@@ -69,3 +67,5 @@ router.get('/producto-bodega/:idBodega', (req, res, next) => {
 })
 
 // ------------------- DONATIVO ESPONTÁNEO ----------------
+
+module.exports = router

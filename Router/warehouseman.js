@@ -2,8 +2,6 @@ const express = require('express');
 const { Route, Operator, Store, delivery_donation, spontaneousDonation, delivery_spontaneousDonation, Donation, DB } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 require('dotenv').config;
 
 // ---------------- VISUALIZAR OPERARIOS -------------------
@@ -36,3 +34,5 @@ router.get('/detalle-entrega:id', (req, res, next) => {
 	})
 	.catch(()=>next(err))
 })
+
+module.exports = router
