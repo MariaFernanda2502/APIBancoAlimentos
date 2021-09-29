@@ -1,7 +1,23 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+require('dotenv').config();
 const app = express();
 const port = 5000;
-require('dotenv').config()
+
+// IMPORT DE LAS RUTAS
+const administratorRouter = require('./Router/administrator');
+const coordinatorRouter = require('./Router/coordinator');
+const operatorRouter = require('./Router/operator');
+const warehousemanRouter = require('./Router/warehouseman');
+
+app.use(bodyParser.json());
+app.use(cors());
+
+app.use('/admin', administratorRouter);
+app.use('coordinator', coordinatorRouter);
+app.use('/operator', operatorRouter);
+app.use('/warehouseman', warehousemanRouter);
 
 // Atrapa todos los errores
 app.use((err, req, res, next) => {
