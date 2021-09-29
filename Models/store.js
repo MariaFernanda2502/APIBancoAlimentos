@@ -1,0 +1,50 @@
+module.exports = (DB, type) => {
+    return DB.define('store',
+    {
+        id: {
+            primaryKey: true,
+            type: type.INTEGER,
+            autoIncrement: true,
+        },
+        determinante: {
+            type: type.INTERGER,
+        },
+        cadena: {
+            type: type.STRING,
+        },
+        nombre: {
+            type: type.STRING,
+        },
+        direccion: {
+            type: type.STRING,
+        },
+        municipio: {
+            type: type.STRING,
+        },
+        telefono: {
+            type: type.BIGINT,
+            validate: {
+                isNumeric: true,
+            }
+        },
+        idAdmin: {
+            foreignKey: true,
+            type: type.INTEGER,
+            references: {
+                model: 'administrator',
+                key: 'id'
+            }
+        },
+        idRuta: {
+            foreignKey: true,
+            type: type.INTEGER,
+            references: {
+                model: 'route',
+                key: 'id'
+            }
+        }
+    }, {
+        // Opción para permitir soft delete
+        paranoid: true
+    })
+}
