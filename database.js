@@ -28,7 +28,7 @@ const DB = new Sequelize(
         
     }
 )
-
+/*Hola*/
 DB.authenticate()
     .then(() => {
         console.log('Connection has been established successfully');
