@@ -17,17 +17,15 @@ const WarehousemanModel = require('./Models/warehouseman');
 
 // INSTANCIA PARA PODER HACER EL INICIO DE SESIÓN
 const DB = new Sequelize(
-    process.env.DB,
-    process.env.DB_USER,
-    process.env.DB_PASS,
+    'BAMX',
+    'admin',
+    'contrasena123',
     {
-        dialect: 'mssql',
-        host: process.env.DB_HOST,
+        dialect: 'mysql',
+        host: 'base-bamx.c84n2jdxsqs3.us-east-1.rds.amazonaws.com',
         port: 3306,
         protocol: 'tcp',
-        dialectOptions: {
-            encrypt: true,
-        }
+        
     }
 )
 
