@@ -1,9 +1,9 @@
 {
   "name": "apiproyecto",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
+	"start": "node ./app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js"
   },
@@ -14,10 +14,20 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "mysql2": "^2.3.0",
     "sequelize": "^6.6.5",
     "tedious": "^13.0.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
-  }
+    "nodemon": "^2.0.13"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MariaFernanda2502/APIBancoAlimentos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MariaFernanda2502/APIBancoAlimentos/issues"
+  },
+  "homepage": "https://github.com/MariaFernanda2502/APIBancoAlimentos#readme",
+  "description": ""
 }

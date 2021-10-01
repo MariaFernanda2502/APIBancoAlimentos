@@ -20,9 +20,11 @@ router.get('/visualizar-operarios', (req, res, next)=>{
 })
 
 // ----- DETALLE Y CONFIRMACIÓN DE LA ENTREGA --------------
-router.get('/detalle-entrega:id', (req, res, next) => {
+router.get('/detalle-entrega/:id', (req, res, next) => {
     const { id } = req.params;
+	
     DB.query(`
+
      `,
      {type: QueryTypes.SELECT}
     )
