@@ -25,10 +25,12 @@ const DB = new Sequelize(
         host: process.env.DB_HOST,
         port: 3306,
         protocol: 'tcp',
-        
+        dialectOptions: {
+            encrypt: true,
+        } 
     }
 )
-
+/*Hola*/
 DB.authenticate()
     .then(() => {
         console.log('Connection has been established successfully');
