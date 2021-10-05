@@ -1,5 +1,5 @@
 const express = require('express');
-const { User, Coordinator, Operator, Warehouseman, Administrator, Store, Warehouse, DB } = require('../database');
+const { User, Coordinator, Operator, Warehouseman, Administrator, Store, Warehouse, Route, DB } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
 require('dotenv').config;
@@ -306,7 +306,7 @@ router.patch('/editar-bodega/:id', async (req, res, next) => {
 	}
 })
 
-// --------------------- ELIMINAR BODEGAS -----------------------
+// --------------------- ELIMINAR BODEGA ------------------------
 router.delete('/eliminar-bodega/:id', async (req, res, next) => {
     const { id } = req.params;
 
@@ -329,15 +329,15 @@ router.delete('/eliminar-bodega/:id', async (req, res, next) => {
 })
 
 // ---------------- NUEVA TIENDA -----------------
-router.post('/crear-bodega', (req, res, next) => {
-    Warehouse.create(req.body)
+router.post('/crear-tienda', (req, res, next) => {
+    Store.create(req.body)
 	.then((result)=>{
-		return res.status(201).json({data: result});
+		return res.status(201).json({data: result}); // MARCA ERROR CUANDO LA RUTA O ADMIN NO EXISTE
     })
     .catch((err)=>{next(err)})
 })
 
-// ------------- VER TIENDAS -----------------
+// ------------------ VER TIENDAS --------------------
 router.get('/ver-tiendas', async (req, res, next) => {
     DB.query(
         'SELECT nombre FROM stores', {
@@ -346,16 +346,95 @@ router.get('/ver-tiendas', async (req, res, next) => {
 
     .then((result) => {
             return res.status(200).json ({
-                data: result 
+                data: result
             })
     })
     .catch((err) => next(err))
 })
 
-// -------------- VER TIENDA -----------------
+// ----------------- VER TIENDA -------------------
+router.get('/ver-tienda/:id', (req, res, next) => {
+    const { id } = req.params;
 
-// ------------ EDITAR TIENDA ---------------
+    Store.findOne({
+        where: {
+            id: id
+        }
+    })
+        DB.query(`
+            SELECT
+                id,
+                nombre,
+                determinante,
+                cadena,
+                direccion
+            FROM stores WHERE id = ${id}
+        `, { type: QueryTypes.SELECT
+            })
+        .then((tienda) => {
+            if(tienda) {
+                return res.status(200).json({
+                    data: tienda // ¿CADENA ES LO MISMO QUE SUCURSAL?
+                })
+            } else {
+            return res.status(404).json({
+                name: "Not found",
+                message: "Sorry, la tienda que buscas no existe"
+            })
+        }
+        })
+        .catch((err) => next(err))
+})
+
+// ---------------------- EDITAR TIENDA ----------------------
+router.patch('/editar-tienda/:id', async (req, res, next) => {
+	const { id } = req.params;
+	const { body } = req;
+	
+    try{
+		let tienda = await Store.findByPk(id)
+
+		if(tienda){
+			await tienda.update(
+				body,
+			)
+			return res.status(200).json({
+                name: "Edicion exitosa",
+                message: "Se realizo la edición exitosamente"
+            })
+		}
+		else{
+			return res.status(404).json({
+				name: "Not found",
+				message: "Sorry, el usuario que buscas no existe"
+			})
+		}
+	} 
+	catch(err){
+		next(err);
+	}
+})
 
 // ----------- ELIMINAR TIENDA --------------
+router.delete('/eliminar-tienda/:id', async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        let tienda = await Store.findOne( { where: { id: id }}) 
+
+        if(tienda){
+            await tienda.destroy()
+            return res.status(204).send()
+                
+        } else {
+            return res.status(404).json({
+                name: "Not found",
+                message: "Sorry, el usuario que buscas no existe"
+            })
+        }
+    } catch(err){
+        next(err);
+    }
+})
 
 module.exports = router
