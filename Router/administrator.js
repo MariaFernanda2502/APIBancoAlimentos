@@ -222,8 +222,11 @@ router.patch('/editar-empleado/:id', async (req, res, next) => {
 
 // ------------------- VER BODEGAS -------------------
 router.get('/ver-bodegas', async (req, res, next) => {
-    DB.query(
-        'SELECT nombre FROM warehouses', {
+    DB.query(`
+        SELECT 
+            nombre
+        FROM warehouses WHERE deletedAt IS NULL
+    `, {
         type: QueryTypes.SELECT
     }) 
 
@@ -341,8 +344,11 @@ router.post('/crear-tienda', (req, res, next) => {
 
 // ------------------ VER TIENDAS --------------------
 router.get('/ver-tiendas', async (req, res, next) => {
-    DB.query(
-        'SELECT nombre FROM stores', {
+    DB.query(`
+        SELECT 
+            nombre
+        FROM stores WHERE deletedAt IS NULL
+    `, {
         type: QueryTypes.SELECT
     }) 
 
