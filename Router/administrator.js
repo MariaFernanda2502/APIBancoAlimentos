@@ -6,9 +6,11 @@ require('dotenv').config;
 
 // ---------- TODO EL PERSONAL ------------
 router.get('/personal', (req, res, next)=>{
-	DB.query(
-        'SELECT id FROM users'
-    , {type: QueryTypes.SELECT
+	DB.query(`
+        SELECT 
+            id
+        FROM users WHERE deletedAt IS NULL
+    `, {type: QueryTypes.SELECT
     })
 	.then((result)=>{
 		return res.status(200).json({
@@ -415,7 +417,7 @@ router.patch('/editar-tienda/:id', async (req, res, next) => {
 	}
 })
 
-// ----------- ELIMINAR TIENDA --------------
+// ---------------------- ELIMINAR TIENDA -----------------------
 router.delete('/eliminar-tienda/:id', async (req, res, next) => {
     const { id } = req.params;
 
