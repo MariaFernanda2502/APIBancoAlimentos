@@ -7,8 +7,18 @@ require('dotenv').config;
 // ---------- TODO EL PERSONAL ------------
 router.get('/personal', (req, res, next)=>{
 	DB.query(
-        'SELECT id FROM users'
-    , {type: QueryTypes.SELECT
+        `SELECT 
+            id,
+            nombre,
+            contrasena,
+            apellidoPaterno,
+            apellidoMaterno,
+            puesto,
+            telefonoCelular,
+            telefonoCasa,
+            correo
+        FROM users
+    ` , {type: QueryTypes.SELECT
     })
 	.then((result)=>{
 		return res.status(200).json({
