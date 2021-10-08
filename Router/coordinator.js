@@ -188,7 +188,6 @@ router.get('/detalles-ruta/:id', (req, res, next) => {
 /* Falta el endpoint de ubicación, pero no se bien que debe mostrar, 
 ¿Las donaciones espontanéas también se colocan aquí? */
 
-
 // ------- PRUEBAS DE CREACIÓN DE RUTAS --------
 router.post('/crear-ruta', (req, res, next) => {
     Route.create(req.body)
