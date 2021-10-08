@@ -47,6 +47,7 @@ router.get('/empleado/:id', (req, res, next) => {
             telefonoCelular,
             telefonoCasa,
             correo
+            placaVehiculo
         FROM users WHERE id = ${id}
     ` , {type: QueryTypes.SELECT
         })
@@ -354,7 +355,12 @@ router.post('/crear-tienda', (req, res, next) => {
 router.get('/ver-tiendas', async (req, res, next) => {
     DB.query(`
         SELECT 
-            nombre
+            determinante,
+            cadena,
+            nombre,
+            direccion,
+            municipio,
+            telefono
         FROM stores WHERE deletedAt IS NULL
     `, {
         type: QueryTypes.SELECT
