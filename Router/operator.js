@@ -15,9 +15,11 @@ router.get('/tiendas-pendientes/:id', (req, res, next)=> {
     })
 		DB.query(`
 			SELECT
-				stores.nombre,
+				operators.id,
 				stores.direccion
-			FROM operators JOIN routes ON id = idOperador
+			FROM users JOIN operators ON users.id = operators.id
+            
+            routes ON id = idOperador
 			JOIN stores ON id = idRoute
 			WHERE operators.id = ${id}
 		`, {
@@ -42,14 +44,11 @@ router.get('/tiendas-pendientes/:id', (req, res, next)=> {
 router.post('/registrar-donativo', (req, res, next) => {
     Donation.create(req.body)
     .then((donation) => {
-        Donation.create({ id: donation.id })
-        .then((result) => {
-            return res.status(201).json({
-                data: donation
-            });
-        })
+        return res.status(201).json({
+            name: "Exito",
+            message: "El donativo de registro exitosamente"
+        });
     })
-    .catch((err) => next(err))
 })
 
 // -------------- PRÓXIMAS ENTREGAS ----------------
