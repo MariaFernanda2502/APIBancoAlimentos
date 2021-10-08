@@ -17,7 +17,7 @@ router.get('/personal', (req, res, next)=>{
             telefonoCelular,
             telefonoCasa,
             correo
-        FROM users
+        FROM users WHERE deletedAt IS NULL
     ` , {type: QueryTypes.SELECT
     })
 	.then((result)=>{
@@ -230,8 +230,11 @@ router.patch('/editar-empleado/:id', async (req, res, next) => {
 
 // ------------------- VER BODEGAS -------------------
 router.get('/ver-bodegas', async (req, res, next) => {
-    DB.query(
-        'SELECT nombre FROM warehouses', {
+    DB.query(`
+        SELECT 
+            nombre
+        FROM warehouses WHERE deletedAt IS NULL
+    `, {
         type: QueryTypes.SELECT
     }) 
 
@@ -349,8 +352,11 @@ router.post('/crear-tienda', (req, res, next) => {
 
 // ------------------ VER TIENDAS --------------------
 router.get('/ver-tiendas', async (req, res, next) => {
-    DB.query(
-        'SELECT nombre FROM stores', {
+    DB.query(`
+        SELECT 
+            nombre
+        FROM stores WHERE deletedAt IS NULL
+    `, {
         type: QueryTypes.SELECT
     }) 
 
@@ -425,7 +431,7 @@ router.patch('/editar-tienda/:id', async (req, res, next) => {
 	}
 })
 
-// ----------- ELIMINAR TIENDA --------------
+// ---------------------- ELIMINAR TIENDA -----------------------
 router.delete('/eliminar-tienda/:id', async (req, res, next) => {
     const { id } = req.params;
 
