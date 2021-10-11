@@ -1,5 +1,5 @@
 const express = require('express');
-const { Operator, Route, Store, donation, delivery_donation, spontaneousDonation, delivery_spontaneousDonation, DB, Donation } = require('../database');
+const { Operator, Donation, Route, Store, Delivery_donation, SpontaneousDonation, Delivery_spontaneousDonation, DB } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
 require('dotenv').config;
