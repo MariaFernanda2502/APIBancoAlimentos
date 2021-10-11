@@ -1,5 +1,5 @@
 const express = require('express');
-const { User, Coordinator, Operator, Warehouseman, Administrator, Store, Warehouse, Route, DB } = require('../database');
+const { User, Coordinator, Operator, Warehouseman, Administrator, Store, Warehouse, DB } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
 require('dotenv').config;
@@ -8,7 +8,8 @@ require('dotenv').config;
 router.get('/personal', (req, res, next)=>{
 	DB.query(`
         SELECT 
-            id
+            id,
+            puesto
         FROM users WHERE deletedAt IS NULL
     `, {type: QueryTypes.SELECT
     })
