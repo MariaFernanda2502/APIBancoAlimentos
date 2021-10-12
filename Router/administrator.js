@@ -347,7 +347,8 @@ router.post('/crear-tienda', (req, res, next) => {
 router.get('/ver-tiendas', async (req, res, next) => {
     DB.query(`
         SELECT 
-            nombre
+            nombre,
+            id
         FROM stores WHERE deletedAt IS NULL
     `, {
         type: QueryTypes.SELECT

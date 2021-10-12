@@ -14,14 +14,16 @@ router.get('/tiendas-pendientes/:id', (req, res, next)=> {
         }
     })
 		DB.query(`
-			SELECT
-				operators.id,
+            SELECT 
                 stores.nombre,
-				stores.direccion
-			FROM users JOIN operators ON users.id = operators.id
-            JOIN routes ON operators.id = idOperador
-			JOIN stores ON routes.id = idRuta
-			WHERE operators.id = ${id} AND operators.deletedAt IS NULL
+                stores.direccion,
+                routes.dia
+            FROM stores JOIN routes ON stores.idRuta = routes.id 
+            JOIN operators ON routes.idOperador = operators.id 
+            WHERE stores.id != (SELECT 
+                idTienda
+            FROM operators JOIN donations ON operators.id = donations.idOperador
+            WHERE operators.id = ${id}) AND operators.id = ${id}
 		`, {
 			type: QueryTypes.SELECT
 		})
@@ -51,11 +53,57 @@ router.post('/registrar-donativo', (req, res, next) => {
     })
 })
 
+// ---------------------- COMPLETAR DONATIVO ----------------------
+router.patch('/completar-donativo/:id', async (req, res, next) => {
+	const { id } = req.params;
+	const{ body } = req;
+	
+    try{
+		let donacion = await Donation.findByPk(id)
+
+		if(donacion){
+			await donacion.update(
+				body,
+			)
+			return res.status(200).json({
+                name: "Edicion exitosa",
+                message: "Se realizo la edición exitosamente"
+            })
+		}
+		else{
+			return res.status(404).json({
+				name: "Not found",
+				message: "Sorry, el usuario que buscas no existe"
+			})
+		}
+	} 
+
+	catch(err){
+		next(err);
+	}
+})
+
+// ---------------- VER DONATIVO -------------------
+
 // -------------- PRÓXIMAS ENTREGAS ----------------
-router.get('/proximas-entregas', (req, res, next)=>{
+router.get('/proximas-entregas/:id', (req, res, next) => {
+    const { id } = req.params;
+
+    Operator.findOne({
+        where: {
+            id: id
+        }
+    })
 
 	DB.query(`
-
+        SELECT 
+            stores.nombre,
+            stores.direccion,
+            delivery_donations.estatus
+        FROM operators JOIN donations ON operators.id = donations.idOperador
+        JOIN delivery_donations ON donations.id = delivery_donations.idDonativo
+        JOIN stores ON donations.idTienda = stores.id
+        WHERE operators.id = ${id}
 	`,{
 		type: QueryTypes.SELECT
 	})
@@ -68,9 +116,18 @@ router.get('/proximas-entregas', (req, res, next)=>{
 })
 
 // ------------------ PRODUCTO POR BODEGA ------------------
-router.get('/producto-bodega/:idBodega', (req, res, next) => {
-    const { idBodega } = req.params;
+router.get('/producto-bodega/:idBodega/:id', (req, res, next) => {
+    const { idBodega, id } = req.params;
     DB.query(`
+        SELECT
+            warehouses.nombre,
+            delivery_donations.kg_abarrotes,
+            delivery_donations.kg_frutas_verduras,
+            delivery_donations.kg_pan, 
+            delivery_donations.kg_no_comestibles
+        FROM donations JOIN delivery_donations ON donations.id = delivery_donations.idDonativo
+        JOIN warehouses ON delivery_donations.idBodega = warehouses.id
+        WHERE idOperador = ${id} AND idBodega = ${idBodega}
      `,
      {type: QueryTypes.SELECT}
     )
