@@ -1,11 +1,13 @@
 {
   "name": "apiproyecto",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
+  "private": true,
   "scripts": {
 	"start": "node ./app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
