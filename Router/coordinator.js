@@ -185,6 +185,17 @@ router.get('/detalles-ruta/:id', (req, res, next) => {
         .catch((err) => next(err))
 })
 
+// --------------- CREAR DONATIVO ESPONTÁNEO ------------
+router.post('/donacion-espontanea', (req, res, next) => {
+    SpontaneousDonation.create(req.body)
+	.then((result)=>{
+		return res.status(201).json({data: result});
+    })
+    .catch((err)=>{next(err)})
+})
+
+// -----------------------SON PRUEBAS------------------------------
+
 /* Falta el endpoint de ubicación, pero no se bien que debe mostrar, 
 ¿Las donaciones espontanéas también se colocan aquí? */
 
