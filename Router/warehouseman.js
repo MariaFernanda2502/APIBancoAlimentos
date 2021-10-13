@@ -8,7 +8,7 @@ require('dotenv').config;
 router.get('/datos-entrega', (req, res, next)=>{
 	DB.query( `
         SELECT
-            users.id,
+            donations.id as id_Donation,
 			users.nombre,
 			users.apellidoMaterno,
 			users.apellidoPaterno,
@@ -38,6 +38,10 @@ router.get('/detalle-entrega/:id', (req, res, next) => {
     })
         DB.query(`
             SELECT
+                delivery_donations.idDonativo,
+                donations.folio,
+				delivery_donations.fecha,
+				warehouses.nombre as bodega,
 				delivery_donations.fecha,
 				warehouses.nombre,
 				users.nombre,

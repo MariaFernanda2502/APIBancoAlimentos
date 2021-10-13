@@ -263,7 +263,7 @@ router.get('/ver-bodegas', async (req, res, next) => {
             direccion,
             municipio,
             telefono
-        FROM warehouses WHERE deletedAt IS NULL
+        FROM warehouses WHERE deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
     `, {
         type: QueryTypes.SELECT
     }) 
@@ -292,7 +292,7 @@ router.get('/ver-bodega/:id', (req, res, next) => {
                 direccion,
                 municipio,
                 telefono
-            FROM warehouses WHERE id = ${id} AND deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
+            FROM warehouses WHERE id = ${id} AND deletedAt IS NULL
         ` , {type: QueryTypes.SELECT
             })
         .then((bodega) => {
