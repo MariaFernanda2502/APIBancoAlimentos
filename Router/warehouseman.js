@@ -12,6 +12,7 @@ router.get('/datos-entrega', (req, res, next)=>{
 			users.nombre,
 			users.apellidoMaterno,
 			users.apellidoPaterno,
+            donations.id,
 			donations.folio
         FROM users JOIN operators ON users.id = operators.id
         JOIN donations ON operators.id = donations.idOperador
@@ -38,6 +39,8 @@ router.get('/detalle-entrega/:id', (req, res, next) => {
     })
         DB.query(`
             SELECT
+                delivery_donations.idDonativo,
+                donations.folio,
 				delivery_donations.fecha,
 				warehouses.nombre,
 				users.nombre,
