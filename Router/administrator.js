@@ -11,6 +11,7 @@ router.get('/personal', (req, res, next)=>{
             id,
             nombre,
             contrasena,
+            username,
             apellidoPaterno,
             apellidoMaterno,
             puesto,
@@ -44,11 +45,12 @@ router.get('/empleado/:id', (req, res, next) => {
             apellidoPaterno,
             apellidoMaterno,
             puesto,
+            username,
+            contrasena,
             telefonoCelular,
             telefonoCasa,
             correo
-            placaVehiculo
-        FROM users WHERE id = ${id}
+        FROM users WHERE id = ${id} AND deletedAt IS NULL
     ` , {type: QueryTypes.SELECT
         })
         .then((result) => {
@@ -70,7 +72,7 @@ router.get('/empleado/:id', (req, res, next) => {
 router.post('/crear-empleado', async(req, res, next) => {
     User.create(req.body)
     .then((user) => {
-        if(user.puesto == "Administrator") {
+        if(user.puesto == "Administrador") {
             Administrator.create({ id: user.id })
             .then((result) => {
                 return res.status(201).json({
@@ -232,8 +234,12 @@ router.patch('/editar-empleado/:id', async (req, res, next) => {
 // ------------------- VER BODEGAS -------------------
 router.get('/ver-bodegas', async (req, res, next) => {
     DB.query(`
-        SELECT 
-            nombre
+        SELECT
+            id, 
+            nombre,
+            direccion,
+            municipio,
+            telefono
         FROM warehouses WHERE deletedAt IS NULL
     `, {
         type: QueryTypes.SELECT
@@ -263,7 +269,7 @@ router.get('/ver-bodega/:id', (req, res, next) => {
                 direccion,
                 municipio,
                 telefono
-            FROM warehouses WHERE id = ${id}
+            FROM warehouses WHERE id = ${id} AND deletedAt IS NULL
         ` , {type: QueryTypes.SELECT
             })
         .then((bodega) => {
@@ -355,6 +361,7 @@ router.post('/crear-tienda', (req, res, next) => {
 router.get('/ver-tiendas', async (req, res, next) => {
     DB.query(`
         SELECT 
+            id,
             determinante,
             cadena,
             nombre,
@@ -389,8 +396,10 @@ router.get('/ver-tienda/:id', (req, res, next) => {
                 nombre,
                 determinante,
                 cadena,
-                direccion
-            FROM stores WHERE id = ${id}
+                direccion,
+                municipio,
+                telefono
+            FROM stores WHERE id = ${id} AND deletedAt IS NULL
         `, { type: QueryTypes.SELECT
             })
         .then((tienda) => {
