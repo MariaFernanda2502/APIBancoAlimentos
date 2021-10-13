@@ -8,18 +8,25 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config;
 
-// ------------ TODO EL PERSONAL ------------
-router.get('/personal', (req, res, next) => {
+// ---------- TODO EL PERSONAL ------------
+router.get('/personal', (req, res, next)=>{
     const query_by = "nombre";
     const query = Boolean(req.query.query) ? req.query.query : '';
 
-	DB.query(`
-        SELECT 
-            nombre,
+	DB.query(
+        `SELECT 
             id,
-            puesto
+            nombre,
+            contrasena,
+            username,
+            apellidoPaterno,
+            apellidoMaterno,
+            puesto,
+            telefonoCelular,
+            telefonoCasa,
+            correo
         FROM users WHERE deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
-    `, {type: QueryTypes.SELECT
+    ` , {type: QueryTypes.SELECT
     })
 	.then((result)=>{
 		return res.status(200).json({
@@ -45,6 +52,8 @@ router.get('/empleado/:id', (req, res, next) => {
             apellidoPaterno,
             apellidoMaterno,
             puesto,
+            username,
+            contrasena,
             telefonoCelular,
             telefonoCasa,
             correo
@@ -248,9 +257,13 @@ router.get('/ver-bodegas', async (req, res, next) => {
     const query = Boolean(req.query.query) ? req.query.query : '';
 
     DB.query(`
-        SELECT 
-            nombre
-        FROM warehouses WHERE deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
+        SELECT
+            id, 
+            nombre,
+            direccion,
+            municipio,
+            telefono
+        FROM warehouses WHERE deletedAt IS NULL
     `, {
         type: QueryTypes.SELECT
     }) 
@@ -279,7 +292,7 @@ router.get('/ver-bodega/:id', (req, res, next) => {
                 direccion,
                 municipio,
                 telefono
-            FROM warehouses WHERE id = ${id} AND deletedAt IS NULL
+            FROM warehouses WHERE id = ${id} AND deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
         ` , {type: QueryTypes.SELECT
             })
         .then((bodega) => {
@@ -404,8 +417,13 @@ router.get('/ver-tiendas', async (req, res, next) => {
 
     DB.query(`
         SELECT 
+            id,
+            determinante,
+            cadena,
             nombre,
-            id
+            direccion,
+            municipio,
+            telefono
         FROM stores WHERE deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
     `, {
         type: QueryTypes.SELECT
@@ -434,7 +452,9 @@ router.get('/ver-tienda/:id', (req, res, next) => {
                 nombre,
                 determinante,
                 cadena,
-                direccion
+                direccion,
+                municipio,
+                telefono
             FROM stores WHERE id = ${id} AND deletedAt IS NULL
         `, { type: QueryTypes.SELECT
             })
