@@ -15,9 +15,11 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "multer": "^1.4.3",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.0",
     "sequelize": "^6.6.5",
+    "sha2": "^1.0.2",
     "tedious": "^13.0.4"
   },
   "devDependencies": {

@@ -20,7 +20,7 @@ router.get('/tiendas-pendientes/:id', (req, res, next)=> {
                 routes.dia
             FROM stores JOIN routes ON stores.idRuta = routes.id 
             JOIN operators ON routes.idOperador = operators.id 
-            WHERE stores.id != (SELECT 
+            WHERE stores.id NOT IN (SELECT 
                 idTienda
             FROM operators JOIN donations ON operators.id = donations.idOperador
             WHERE operators.id = ${id}) AND operators.id = ${id}
@@ -83,9 +83,9 @@ router.patch('/completar-donativo/:id', async (req, res, next) => {
 	}
 })
 
-// ---------------- VER DONATIVO -------------------
+// -------------------- VER DONATIVO ---------------------
 
-// -------------- PRÓXIMAS ENTREGAS ----------------
+// ------------------ PRÓXIMAS ENTREGAS ------------------
 router.get('/proximas-entregas/:id', (req, res, next) => {
     const { id } = req.params;
 
@@ -115,7 +115,7 @@ router.get('/proximas-entregas/:id', (req, res, next) => {
 	.catch(()=>next(err))
 })
 
-// ------------------ PRODUCTO POR BODEGA ------------------
+// --------------------- PRODUCTO POR BODEGA ---------------------
 router.get('/producto-bodega/:idBodega/:id', (req, res, next) => {
     const { idBodega, id } = req.params;
     DB.query(`

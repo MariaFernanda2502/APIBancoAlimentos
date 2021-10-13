@@ -2,15 +2,23 @@ const express = require('express');
 const { User, Coordinator, Operator, Warehouseman, Administrator, Store, Warehouse, DB } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
+const crypto = require("crypto");
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 require('dotenv').config;
 
-// ---------- TODO EL PERSONAL ------------
-router.get('/personal', (req, res, next)=>{
+// ------------ TODO EL PERSONAL ------------
+router.get('/personal', (req, res, next) => {
+    const query_by = "nombre";
+    const query = Boolean(req.query.query) ? req.query.query : '';
+
 	DB.query(`
         SELECT 
+            nombre,
             id,
             puesto
-        FROM users WHERE deletedAt IS NULL
+        FROM users WHERE deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
     `, {type: QueryTypes.SELECT
     })
 	.then((result)=>{
@@ -60,7 +68,20 @@ router.get('/empleado/:id', (req, res, next) => {
 
 // ---------------- CREAR NUEVO EMPLEADO ----------------
 router.post('/crear-empleado', async(req, res, next) => {
-    User.create(req.body)
+    const secret = req.body.contrasena;
+    const hash = crypto.createHmac("sha256", secret).digest("hex");
+
+    User.create({
+        nombre: req.body.nombre,
+        apellidoPaterno: req.body.apellidoPaterno,
+        apellidoMaterno: req.body.apellidoMaterno,
+        correo: req.body.correo,
+        telefonoCasa: req.body.telefonoCasa,
+        telefonoCelular: req.body.telefonoCelular,
+        username: req.body.username,
+        contrasena: hash,
+        puesto: req.body.puesto
+    })
     .then((user) => {
         if(user.puesto == "Administrador") {
             Administrator.create({ id: user.id })
@@ -95,7 +116,7 @@ router.post('/crear-empleado', async(req, res, next) => {
         if(user.puesto == "Almacenista") {
             Warehouseman.create({ 
                 id: user.id,
-                idBodega: req.body.idBodega // SE QUEDA CARGANDO SI LA BODEGA NO EXISTE
+                idBodega: req.body.idBodega
             })
             .then((result) => {
                 return res.status(201).json({
@@ -223,10 +244,13 @@ router.patch('/editar-empleado/:id', async (req, res, next) => {
 
 // ------------------- VER BODEGAS -------------------
 router.get('/ver-bodegas', async (req, res, next) => {
+    const query_by = "nombre";
+    const query = Boolean(req.query.query) ? req.query.query : '';
+
     DB.query(`
         SELECT 
             nombre
-        FROM warehouses WHERE deletedAt IS NULL
+        FROM warehouses WHERE deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
     `, {
         type: QueryTypes.SELECT
     }) 
@@ -334,22 +358,55 @@ router.delete('/eliminar-bodega/:id', async (req, res, next) => {
     }
 })
 
-// ---------------- NUEVA TIENDA -----------------
-router.post('/crear-tienda', (req, res, next) => {
-    Store.create(req.body)
+// - PARTE DE LA CREACIÓN DE LA TIENDA -
+const diskstorage = multer.diskStorage({
+    destination: path.join(__dirname, '../images'),
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+
+const fileUpload = multer({
+    storage: diskstorage
+}).single('image')
+
+// ---------------------- NUEVA TIENDA ----------------------
+router.post('/crear-tienda', fileUpload,(req, res, next) => {
+    /*const data = fs.readFileSync(path.join(__dirname, '../images/' + req.file.filename))
+    const type = req.file.mimetype
+    const name = req.file.originalname*/
+
+    Store.create({
+        determinante: req.body.determinante,
+        cadena: req.body.cadena,
+        nombre: req.body.nombre,
+        direccion: req.body.direccion,
+        municipio: req.body.municipio,
+        telefono: req.body.telefono,
+        username: req.body.username,
+        /*
+        typeImage: type,
+        nameImage: name,
+        dataImage: data, */
+        idAdmin: req.body.idAdmin,
+        idRuta: req.body.idRuta
+    })
 	.then((result)=>{
-		return res.status(201).json({data: result}); // MARCA ERROR CUANDO LA RUTA O ADMIN NO EXISTE
+		return res.status(201).json({data: result});
     })
     .catch((err)=>{next(err)})
 })
 
 // ------------------ VER TIENDAS --------------------
 router.get('/ver-tiendas', async (req, res, next) => {
+    const query_by = "nombre";
+    const query = Boolean(req.query.query) ? req.query.query : '';
+
     DB.query(`
         SELECT 
             nombre,
             id
-        FROM stores WHERE deletedAt IS NULL
+        FROM stores WHERE deletedAt IS NULL AND ${query_by} LIKE '%${query}%'
     `, {
         type: QueryTypes.SELECT
     }) 
@@ -444,6 +501,34 @@ router.delete('/eliminar-tienda/:id', async (req, res, next) => {
         }
     } catch(err){
         next(err);
+    }
+})
+
+// ------------------- LOGIN --------------------
+router.post('/login', async (req, res, next) => {
+    const secret = req.body.contrasena;
+    const hash = crypto.createHmac("sha256", secret).digest("hex");
+
+    try {
+        const user = await User.findOne({
+            where: {
+                username: req.body.username,
+                contrasena: hash,
+            }
+        })
+
+        if(!user) {
+            return res.status(401).json({
+                data: 'Credenciales no válidas',
+            })
+        }
+
+        return res.status(201).json({
+            data: "Bienvenido",
+        });
+
+    } catch (error) {
+        next(error);
     }
 })
 
