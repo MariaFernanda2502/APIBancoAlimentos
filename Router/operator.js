@@ -1,7 +1,8 @@
 const express = require('express');
-const { Operator, Donation, Route, Store, Delivery_donation, SpontaneousDonation, Delivery_spontaneousDonation, DB } = require('../database');
+const { Operator, Donation, User, DB } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
+const crypto = require("crypto");
 require('dotenv').config;
 
 // ----------------- TIENDAS PENDIENTES ------------------
@@ -86,9 +87,9 @@ router.patch('/completar-donativo/:id', async (req, res, next) => {
 	}
 })
 
-// ---------------- VER DONATIVO -------------------
+// -------------------- VER DONATIVO ---------------------
 
-// -------------- PRÓXIMAS ENTREGAS ----------------
+// ------------------ PRÓXIMAS ENTREGAS ------------------
 router.get('/proximas-entregas/:id', (req, res, next) => {
     const { id } = req.params;
 
@@ -118,7 +119,7 @@ router.get('/proximas-entregas/:id', (req, res, next) => {
 	.catch(()=>next(err))
 })
 
-// ------------------ PRODUCTO POR BODEGA ------------------
+// --------------------- PRODUCTO POR BODEGA ---------------------
 router.get('/producto-bodega/:idBodega/:id', (req, res, next) => {
     const { idBodega, id } = req.params;
     DB.query(`
@@ -143,6 +144,33 @@ router.get('/producto-bodega/:idBodega/:id', (req, res, next) => {
 	.catch(()=>next(err))
 })
 
-// ------------------- DONATIVO ESPONTÁNEO ----------------
+// ------------------- LOGIN --------------------
+router.post('/login', async (req, res, next) => {
+    const secret = req.body.contrasena;
+    const hash = crypto.createHmac("sha256", secret).digest("hex");
+
+    try {
+        const user = await User.findOne({
+            where: {
+                username: req.body.username,
+                contrasena: hash,
+                puesto: req.body.puesto = "Operador"
+            }
+        })
+
+        if(!user) {
+            return res.status(401).json({
+                data: 'Credenciales no válidas',
+            })
+        }
+
+        return res.status(201).json({
+            data: "Bienvenido",
+        });
+
+    } catch (error) {
+        next(error);
+    }
+})
 
 module.exports = router

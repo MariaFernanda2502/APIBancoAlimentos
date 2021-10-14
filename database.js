@@ -27,6 +27,9 @@ const DB = new Sequelize(
         protocol: 'tcp',
         dialectOptions: {
             encrypt: true,
+            ssl : {
+                rejectUnauthorized: false
+            }
         } 
     }
 )
