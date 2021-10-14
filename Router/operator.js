@@ -8,23 +8,26 @@ require('dotenv').config;
 router.get('/tiendas-pendientes/:id', (req, res, next)=> {
 	const { id } = req.params;
 
+
     Operator.findOne({
         where: {
             id: id
         }
     })
 		DB.query(`
-            SELECT 
-                stores.nombre,
-                stores.direccion,
-                routes.dia
-            FROM stores JOIN routes ON stores.idRuta = routes.id 
-            JOIN operators ON routes.idOperador = operators.id 
-            WHERE stores.id != (SELECT 
-                idTienda
-            FROM operators JOIN donations ON operators.id = donations.idOperador
-            WHERE operators.id = ${id}) AND operators.id = ${id}
-		`, {
+        SELECT 
+            stores.nombre,
+            stores.direccion,
+            stores.id,
+            routes.dia
+        FROM stores JOIN routes ON stores.idRuta = routes.id 
+        JOIN operators ON routes.idOperador = operators.id 
+        WHERE stores.id NOT IN (SELECT 
+            idTienda
+        FROM operators JOIN donations ON operators.id = donations.idOperador
+        WHERE operators.id = ${id} AND fecha = CURDATE()) AND operators.id = ${id}
+    `
+, {
 			type: QueryTypes.SELECT
 		})
 		.then((result) => {
