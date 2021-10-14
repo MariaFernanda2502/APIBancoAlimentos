@@ -294,4 +294,23 @@ router.get('/maps/:id', (req, res, next) => {
         .catch((err) => next(err))
 })
 
+/*
+router.get('/login/:username/:contasena', (req, res, next)=>{
+    const {username} = req.params;
+    const {contrasena} = req.params;
+	DB.query( `
+    select *
+    from users 
+    where users.username= ${username} and ${contasena} users.puesto = "coordinador"
+    `, {type: QueryTypes.SELECT
+    })
+	.then((result)=>{
+		return res.status(200).json({
+			data: result
+		})
+	})
+	.catch((err)=>next(err))
+})
+
+*/
 module.exports = router
