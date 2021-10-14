@@ -534,6 +534,7 @@ router.post('/login', async (req, res, next) => {
             where: {
                 username: req.body.username,
                 contrasena: hash,
+                puesto: req.body.puesto = "Administrador"
             }
         })
 
