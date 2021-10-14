@@ -1,7 +1,8 @@
 const express = require('express');
-const { Donation, Delivery_donation, Operator, spontaneousDonation, delivery_spontaneousDonation, DB } = require('../database');
+const { Donation, Delivery_donation, User, DB } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
+const crypto = require("crypto");
 require('dotenv').config;
 
 // ----------- VISUALIZAR OPERARIOS ------------
@@ -98,6 +99,35 @@ router.patch('/editar-detalles/:id', async (req, res, next) => {
 	catch(err){
 		next(err);
 	}
+})
+
+// ------------------- LOGIN --------------------
+router.post('/login', async (req, res, next) => {
+    const secret = req.body.contrasena;
+    const hash = crypto.createHmac("sha256", secret).digest("hex");
+
+    try {
+        const user = await User.findOne({
+            where: {
+                username: req.body.username,
+                contrasena: hash,
+                puesto: req.body.puesto = "Almacenista"
+            }
+        })
+
+        if(!user) {
+            return res.status(401).json({
+                data: 'Credenciales no válidas',
+            })
+        }
+
+        return res.status(201).json({
+            data: "Bienvenido",
+        });
+
+    } catch (error) {
+        next(error);
+    }
 })
 
 module.exports = router
