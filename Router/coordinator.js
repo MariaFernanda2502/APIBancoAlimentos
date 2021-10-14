@@ -12,7 +12,8 @@ router.get('/donativos', (req, res, next)=>{
             users.nombre,
             users.apellidoPaterno,
             users.apellidoMaterno,
-            stores.nombre
+            stores.nombre,
+            donations.id
         FROM users JOIN operators ON users.id = operators.id
         JOIN donations ON operators.id = donations.idOperador
         JOIN stores ON donations.idTienda = stores.id
@@ -42,7 +43,6 @@ router.get('/detalles-entrega/:id', (req, res, next) => {
                 users.nombre,
                 users.apellidoPaterno,
                 users.apellidoMaterno,
-                donations.id,
                 kg_frutas_verduras,
                 kg_pan,
                 kg_abarrotes,
@@ -110,10 +110,62 @@ router.get('/rutas', (req, res, next)=>{
 	DB.query( `
         SELECT
             routes.id,
-            stores.direccion
+            stores.direccion,
+            users.id as userid,
+            users.nombre
         FROM routes JOIN stores ON routes.id = stores.idRuta
         WHERE routes.deletedAt IS NULL AND routes.id = stores.idRuta
         GROUP BY routes.id
+    `, {type: QueryTypes.SELECT
+    })
+	.then((result)=>{
+		return res.status(200).json({
+			data: result
+		})
+	})
+	.catch((err)=>next(err))
+})
+
+router.get('/operadores', (req, res, next)=>{
+	DB.query( `
+        SELECT
+            users.id as userid,
+            users.nombre
+        FROM users
+    `, {type: QueryTypes.SELECT
+    })
+	.then((result)=>{
+		return res.status(200).json({
+			data: result
+		})
+	})
+	.catch((err)=>next(err))
+})
+
+router.get('/tiendas', (req, res, next)=>{
+	DB.query( `
+        SELECT
+            stores.id,
+            stores.nombre
+        FROM stores
+    `, {type: QueryTypes.SELECT
+    })
+	.then((result)=>{
+		return res.status(200).json({
+			data: result
+		})
+	})
+	.catch((err)=>next(err))
+})
+
+router.get('/ruta-operador', (req, res, next)=>{
+	DB.query( `
+        SELECT
+            routes.id,
+            users.nombre
+        FROM users JOIN operators On users.id = operators.id
+        JOIN routes On operators.id = routes.idOperador
+
     `, {type: QueryTypes.SELECT
     })
 	.then((result)=>{
@@ -206,6 +258,40 @@ router.post('/crear-ruta', (req, res, next) => {
 		return res.status(201).json({data: result});
     })
     .catch((err)=>{next(err)})
+})
+
+router.get('/maps/:id', (req, res, next) => {
+    const { id } = req.params;
+
+    Donation.findOne({
+        where: {
+            id: id
+        }
+    })
+        DB.query(`
+            SELECT
+                users.id,
+                users.nombre,
+                users.apellidoPaterno,
+                operators.latitud,
+                operators.longitud
+            FROM operators JOIN users ON operators.id = users.id
+            WHERE users.id = ${id}
+        `, { type: QueryTypes.SELECT
+            })
+        .then((tienda) => {
+            if(tienda) {
+                return res.status(200).json({
+                    data: tienda
+                })
+            } else {
+            return res.status(404).json({
+                name: "Not found",
+                message: "Sorry, la el donativo que buscas no existe"
+            })
+        }
+        })
+        .catch((err) => next(err))
 })
 
 module.exports = router
