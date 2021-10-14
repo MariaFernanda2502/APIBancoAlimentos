@@ -8,7 +8,7 @@ require('dotenv').config;
 router.get('/datos-entrega', (req, res, next)=>{
 	DB.query( `
         SELECT
-            users.id,
+            donations.id as id_Donation,
 			users.nombre,
 			users.apellidoMaterno,
 			users.apellidoPaterno,
@@ -38,8 +38,10 @@ router.get('/detalle-entrega/:id', (req, res, next) => {
     })
         DB.query(`
             SELECT
+                delivery_donations.idDonativo,
+                donations.folio,
 				delivery_donations.fecha,
-				warehouses.nombre,
+				warehouses.nombre as bodega,
 				users.nombre,
 				users.apellidoPaterno,
 				users.apellidoMaterno,
@@ -54,15 +56,15 @@ router.get('/detalle-entrega/:id', (req, res, next) => {
             WHERE donations.id = ${id} AND donations.deletedAt IS NULL
         `, { type: QueryTypes.SELECT
             })
-        .then((tienda) => {
-            if(tienda) {
+        .then((result) => {
+            if(result) {
                 return res.status(200).json({
-                    data: tienda
+                    data: result
                 })
             } else {
             return res.status(404).json({
                 name: "Not found",
-                message: "Sorry, la el donativo que buscas no existe"
+                message: "Sorry, el donativo que buscas no existe"
             })
         }
         })
