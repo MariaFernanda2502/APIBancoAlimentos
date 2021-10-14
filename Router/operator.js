@@ -119,6 +119,7 @@ router.get('/proximas-entregas/:id', (req, res, next) => {
 // --------------------- PRODUCTO POR BODEGA ---------------------
 router.get('/producto-bodega/:idBodega/:id', (req, res, next) => {
     const { idBodega, id } = req.params;
+
     DB.query(`
         SELECT
             warehouses.nombre,
@@ -126,7 +127,8 @@ router.get('/producto-bodega/:idBodega/:id', (req, res, next) => {
             delivery_donations.kg_frutas_verduras,
             delivery_donations.kg_pan, 
             delivery_donations.kg_no_comestibles
-        FROM donations JOIN delivery_donations ON donations.id = delivery_donations.idDonativo
+        FROM operators JOIN donations ON operators.id = donations.idOperador
+        JOIN delivery_donations ON donations.id = delivery_donations.idDonativo
         JOIN warehouses ON delivery_donations.idBodega = warehouses.id
         WHERE idOperador = ${id} AND idBodega = ${idBodega}
      `,
