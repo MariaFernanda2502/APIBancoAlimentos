@@ -29,7 +29,7 @@ router.get('/donativos', (req, res, next)=>{
 	.catch((err)=>next(err))
 })
 
-// ------- DETALLE TODOS LOS DONATIVOS ESPONTANEOS --------
+// ----- DETALLE TODOS LOS DONATIVOS ESPONTANEOS -------
 router.get('/donativos-espontaneos', (req, res, next)=>{
 	DB.query( `
         SELECT
@@ -92,7 +92,7 @@ router.get('/detalles-entrega/:id', (req, res, next) => {
         .catch((err) => next(err))
 })
 
-// --------------- DETALLES ENTREGA ESPONTANEA -----
+// ------------------- DETALLES ENTREGA ESPONTANEA -----------------
 router.get('/detalles-entrega-espontanea/:id', (req, res, next) => {
     const { id } = req.params;
 
@@ -141,7 +141,7 @@ router.post('/asignar-bodega', (req, res, next) => {
 })
 
 
-// ------- ASIGNAR BODEGAS ESPONTANEAS --------
+// -------------- ASIGNAR BODEGAS ESPONTANEAS -----------------
 router.post('/asignar-bodega-espontanea', (req, res, next) => {
     Delivery_spontaneousDonation.create(req.body)
 	.then((result)=>{
@@ -229,7 +229,7 @@ router.get('/rutas', (req, res, next)=>{
 	.catch((err)=>next(err))
 })
 
-// ------- VISUALIZAR OPERADORES --------
+// --------- VISUALIZAR OPERADORES ----------
 router.get('/operadores', (req, res, next)=>{
 	DB.query( `
         SELECT
@@ -247,7 +247,7 @@ router.get('/operadores', (req, res, next)=>{
 	.catch((err)=>next(err))
 })
 
-// ------- VISUALIZAR TIENDAS --------
+// --------- VISUALIZAR TIENDAS ----------
 router.get('/tiendas', (req, res, next)=>{
 	DB.query( `
         SELECT
@@ -264,7 +264,7 @@ router.get('/tiendas', (req, res, next)=>{
 	.catch((err)=>next(err))
 })
 
-// ------- VISUALIZAR BODEGAS --------
+// --------- VISUALIZAR BODEGAS ----------
 router.get('/bodegas', (req, res, next)=>{
 	DB.query( `
         SELECT
@@ -281,7 +281,7 @@ router.get('/bodegas', (req, res, next)=>{
 	.catch((err)=>next(err))
 })
 
-// ------- VISUALIZAR LAS RUTAS Y EL OPERADOR RESPONSABLE --------
+//VISUALIZAR LAS RUTAS Y EL OPERADOR RESPONSABLE
 router.get('/ruta-operador', (req, res, next)=>{
 	DB.query( `
         SELECT
@@ -301,7 +301,7 @@ router.get('/ruta-operador', (req, res, next)=>{
 	.catch((err)=>next(err))
 })
 
-// -------------------- ASIGNAR OPERADOR A UNA RUTA ------------
+// ----------------- ASIGNAR OPERADOR A UNA RUTA ----------------
 router.patch('/asignar-operador/:id', async (req, res, next) => {
 	const { id } = req.params;
 	const { body } = req;
@@ -339,7 +339,7 @@ router.post('/donacion-espontanea', (req, res, next) => {
     .catch((err)=>{next(err)})
 })
 
-// ------- VISUALIZACIÓN DE RUTAS --------
+// --------- VISUALIZACIÓN DE RUTAS ---------
 router.get('/maps/:id', (req, res, next) => {
     const { id } = req.params;
 
@@ -375,7 +375,7 @@ router.get('/maps/:id', (req, res, next) => {
 })
 
 
-// ------- VISUALIZACIÓN DE LAS TIENDAS POR RUTA --------
+// ----- VISUALIZACIÓN DE LAS TIENDAS POR RUTA ------
 router.get('/ruta-tiendas/:id', (req, res, next) => {
     const { id } = req.params;
 
