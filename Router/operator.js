@@ -19,7 +19,6 @@ router.get('/tiendas-pendientes/:id', (req, res, next)=> {
         SELECT 
             stores.nombre,
             stores.direccion,
-            stores.id,
             routes.dia
         FROM stores JOIN routes ON stores.idRuta = routes.id 
         JOIN operators ON routes.idOperador = operators.id 
@@ -50,6 +49,7 @@ router.get('/tiendas-pendientes/:id', (req, res, next)=> {
 router.post('/registrar-donativo', (req, res, next) => {
     Donation.create(req.body)
     .then((donacion) => {
+        console.log(req.body)
         return res.status(201).json({
             name: "Exito",
             message: "El donativo de registro exitosamente"
