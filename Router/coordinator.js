@@ -23,7 +23,7 @@ router.get('/donativos', (req, res, next)=>{
     })
 	.then((result)=>{
 		return res.status(200).json({
-			data: result // NO MUESTRA EL NOMBRE, SE CONFUNDE CON EL NOMBRE DE TIENDA
+			data: result
 		})
 	})
 	.catch((err)=>next(err))
@@ -47,7 +47,7 @@ router.get('/donativos-espontaneos', (req, res, next)=>{
     })
 	.then((result)=>{
 		return res.status(200).json({
-			data: result // NO MUESTRA EL NOMBRE, SE CONFUNDE CON EL NOMBRE DE TIENDA
+			data: result 
 		})
 	})
 	.catch((err)=>next(err))

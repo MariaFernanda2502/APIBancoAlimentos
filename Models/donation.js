@@ -1,5 +1,5 @@
 module.exports = (DB, type) => {
-    return DB.define('donation',
+    return DB.define('donations',
     {
         id: {
             primaryKey: true,

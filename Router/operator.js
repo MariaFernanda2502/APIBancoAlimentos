@@ -24,7 +24,7 @@ router.get('/tiendas-pendientes/:id', (req, res, next)=> {
             WHERE stores.id NOT IN (SELECT 
                 idTienda
             FROM operators JOIN donations ON operators.id = donations.idOperador
-            WHERE operators.id = ${id} AND fecha = CURDATE()) AND operators.id = ${id}
+            WHERE operators.id = ${id} AND fecha = DATE_FORMAT(CURDATE() - 1, '%Y-%m-%d')) AND operators.id = ${id}
 		`, {
 			type: QueryTypes.SELECT
 		})
