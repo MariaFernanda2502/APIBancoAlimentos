@@ -1,5 +1,5 @@
 const express = require('express');
-const { Donation, Delivery_donation, User, DB } = require('../database');
+const { Donation, Delivery_donation, User, Warehouse, DB, Warehouseman } = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
 const crypto = require("crypto");
@@ -115,6 +115,12 @@ router.post('/login', async (req, res, next) => {
             }
         })
 
+        const almacenista = await Warehouseman.findOne({
+            where: {
+                id: user.id,
+            }
+        })
+
         if(!user) {
             return res.status(401).json({
                 data: 'Credenciales no válidas',
@@ -122,7 +128,9 @@ router.post('/login', async (req, res, next) => {
         }
 
         return res.status(201).json({
-            data: "Bienvenido",
+            data: {
+                almacenista,
+            }
         });
 
     } catch (error) {
