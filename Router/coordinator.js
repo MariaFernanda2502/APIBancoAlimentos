@@ -236,7 +236,7 @@ router.get('/operadores', (req, res, next)=>{
             users.id,
             users.nombre
         FROM users
-        where puesto = "Operador"
+        where puesto = "Operador" AND users.deletedAt IS NULL 
     `, {type: QueryTypes.SELECT
     })
 	.then((result)=>{
@@ -253,7 +253,8 @@ router.get('/tiendas', (req, res, next)=>{
         SELECT
             stores.id,
             stores.nombre
-        FROM stores
+        FROM stores 
+        where stores.deletedAt IS NULL
     `, {type: QueryTypes.SELECT
     })
 	.then((result)=>{
@@ -270,7 +271,8 @@ router.get('/bodegas', (req, res, next)=>{
         SELECT
             warehouses.id,
             warehouses.nombre
-        FROM warehouses
+        FROM warehouses 
+        where warehouses.deletedAt IS NULL
     `, {type: QueryTypes.SELECT
     })
 	.then((result)=>{
