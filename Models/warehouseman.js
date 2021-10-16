@@ -1,5 +1,5 @@
 module.exports = (DB, type) => {
-    return DB.define('warehouseman',
+    return DB.define('warehousemans',
     {
         id: {
             foreignKey: true,

@@ -1,5 +1,5 @@
 module.exports = (DB, type) => {
-    return DB.define('coordinator',
+    return DB.define('coordinators',
     {
         id: {
             foreignKey: true,

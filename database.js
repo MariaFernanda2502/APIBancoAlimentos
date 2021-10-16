@@ -58,67 +58,67 @@ const Warehouseman = WarehousemanModel(DB, Sequelize);
 
 // RELACIONES
 // 1 administrator(1), user(1) HERENCIA
-User.hasOne(Administrator);
+// User.hasOne(Administrator);
 Administrator.belongsTo(User, { foreignKey: 'id' });
 
 // 2 operator(1), user(1) HERENCIA
-User.hasOne(Operator);
+// User.hasOne(Operator);
 Operator.belongsTo(User, { foreignKey:'id' });
 
 // 3 coordinator(1), user(1) HERENCIA
-User.hasOne(Coordinator);
+// User.hasOne(Coordinator);
 Coordinator.belongsTo(User, { foreignKey:'id' });
 
 // 4 operator(1), user(1) HERENCIA
-User.hasOne(Warehouseman);
+// User.hasOne(Warehouseman);
 Warehouseman.belongsTo(User, { foreignKey:'id' });
 
 // 5 operator(1), ruta(*)
-Operator.hasMany(Route);
+// Operator.hasMany(Route);
 Route.belongsTo(Operator, { foreignKey:'idOperador' });
 
 // 6 ruta(1), store(*)
-Route.hasMany(Store);
+// Route.hasMany(Store);
 Store.belongsTo(Route, { foreignKey:'idRuta' });
 
 // 7 administrator(1), store(*)
-Administrator.hasMany(Store);
+// Administrator.hasMany(Store);
 Store.belongsTo(Administrator, { foreignKey:'idAdmin' });
 
 // 8 operator(1), donation(*)
-Operator.hasMany(Donation);
+// Operator.hasMany(Donation);
 Donation.belongsTo(Operator, { foreignKey:'idOperador' });
 
 // 9 operator(1), spontaneousDonation(*)
-Operator.hasMany(SpontaneousDonation);
+// Operator.hasMany(SpontaneousDonation);
 SpontaneousDonation.belongsTo(Operator, { foreignKey:'idOperador' });
 
 // 10 store(1), donation(*)
-Store.hasMany(Donation);
+// Store.hasMany(Donation);
 Donation.belongsTo(Store, { foreignKey:'idTienda' });
 
 // 11 store(1), spontaneousDonation(*)
-Store.hasMany(SpontaneousDonation);
+// Store.hasMany(SpontaneousDonation);
 SpontaneousDonation.belongsTo(Store, { foreignKey:'idTienda' });
 
 // 12 donation(1), delivery_Donation(*)
-Donation.hasMany(Delivery_donation);
+// Donation.hasMany(Delivery_donation);
 Delivery_donation.belongsTo(Donation, { foreignKey:'idDonativo' });
 
 // 13 spontaneousDonation(1), delivery_spontaneousDonation(*)
-SpontaneousDonation.hasMany(Delivery_spontaneousDonation);
+// SpontaneousDonation.hasMany(Delivery_spontaneousDonation);
 Delivery_spontaneousDonation.belongsTo(SpontaneousDonation, { foreignKey:'idDonativo' });
 
 // 14 warehouse(1), delivery_Donation(*)
-Warehouse.hasMany(Delivery_donation);
+// Warehouse.hasMany(Delivery_donation);
 Delivery_donation.belongsTo(Warehouse, { foreignKey:'idBodega' });
 
 // 15 warehouse(1), delivery_spontaneousDonation(*)
-Warehouse.hasMany(Delivery_spontaneousDonation);
+// Warehouse.hasMany(Delivery_spontaneousDonation);
 Delivery_spontaneousDonation.belongsTo(Warehouse, { foreignKey:'idBodega' });
 
 // 16 warehouseman(1), warehouse(1)
-Warehouse.hasOne(Warehouseman);
+// Warehouse.hasOne(Warehouseman);
 Warehouseman.belongsTo(Warehouse, { foreignKey: 'idBodega' });
 
 // Para hacer drop de las tablas antes del sync
