@@ -298,7 +298,7 @@ router.get('/ver-bodega/:id', (req, res, next) => {
         .then((bodega) => {
             if(bodega) {
                 return res.status(200).json({
-                    data: bodega // ME FALTA MOSTRAR EL ENCARGADO DE LA BODEGA
+                    data: bodega
                 })
             } else {
             return res.status(404).json({

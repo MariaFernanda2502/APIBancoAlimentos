@@ -1,5 +1,5 @@
 module.exports = (DB, type) => {
-    return DB.define('route',
+    return DB.define('routes',
     {
         id: {
             primaryKey: true,
