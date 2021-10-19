@@ -1,5 +1,5 @@
 const express = require('express');
-const { Operator, Donation, User, DB } = require('../database');
+const { Operator, Donation, User, DB,  SpontaneousDonation} = require('../database');
 const { QueryTypes, json } = require('sequelize');
 const router = express.Router();
 const crypto = require("crypto");
@@ -161,6 +161,13 @@ router.post('/login', async (req, res, next) => {
             }
         })
 
+        
+        const operador = await Operator.findOne({
+            where: {
+                id: user.id,
+            }
+        })
+
         if(!user) {
             return res.status(401).json({
                 data: 'Credenciales no válidas',
@@ -168,7 +175,7 @@ router.post('/login', async (req, res, next) => {
         }
 
         return res.status(201).json({
-            data: "Bienvenido",
+            data: operador,
         });
 
     } catch (error) {
@@ -192,7 +199,7 @@ router.get('/tiendas-espontaneas/:id', (req, res, next)=> {
                 stores.id
 
             FROM spontaneousDonations JOIN stores ON spontaneousDonations.idTienda = stores.id
-            where idOperador = ${id}
+            where idOperador = ${id} AND estatusOperador = 'pendiente'
 		`, {
 			type: QueryTypes.SELECT
 		})
@@ -211,7 +218,94 @@ router.get('/tiendas-espontaneas/:id', (req, res, next)=> {
         .catch((err) => next(err))
 })
 
+router.get('/id-espontaneo/:idOperador/:idTienda', (req, res, next)=> {
+	const { idOperador, idTienda } = req.params;
+		DB.query(`
+            SELECT 
+                id
+            FROM spontaneousDonations 
+            where idOperador = ${idOperador} and idTienda = ${idTienda}
+		`, {
+			type: QueryTypes.SELECT
+		})
+		.then((result) => {
+            if(result) {
+                return res.status(200).json({
+                    data: result
+                })
+            } else {
+            return res.status(404).json({
+                name: "Not found",
+                message: "Sorry, el usuario que buscas no existe"
+            })
+        }
+        })
+        .catch((err) => next(err))
+})
 
+router.patch('/actualizar-operador/:id', async (req, res, next) => {
+	const { id } = req.params;
+	const { body } = req;
+	
+    try{
+		let operator = await Operator.findByPk(id)
+
+		if(operator){
+			await operator.update(
+				body,
+			)
+			return res.status(200).json({
+                name: "Edicion exitosa",
+                message: "Se realizo la edición exitosamente"
+            })
+		}
+		else{
+			return res.status(404).json({
+				name: "Not found",
+				message: "Sorry, el usuario que buscas no existe"
+			})
+		}
+	} 
+	catch(err){
+		next(err);
+	}
+})
+
+router.patch('/actualizar-espontaneo/:idTienda/:idOperador', async (req, res, next) => {
+	const { idTienda, idOperador } = req.params;
+	const { body } = req;
+
+    try{
+        const espontanea = await SpontaneousDonation.findOne({
+            where: {
+                idOperador:idOperador,
+                idTienda:idTienda,
+            }
+        })
+        console.log(espontanea.id)
+
+		let spontaneousDonation = await SpontaneousDonation.findByPk(espontanea.id) 
+
+		if(spontaneousDonation){
+			await spontaneousDonation.update(
+				body,
+			)
+			return res.status(200).json({
+                name: "Edicion exitosa",
+                message: "Se realizo la edición exitosamente"
+            })
+		}
+		else{
+			return res.status(404).json({
+				name: "Not found",
+				message: "Sorry, el usuario que buscas no existe"
+			})
+		}
+	} 
+	catch(err){
+		next(err);
+	}
+})
 
 
 
