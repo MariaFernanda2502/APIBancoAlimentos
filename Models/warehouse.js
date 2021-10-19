@@ -22,10 +22,10 @@ module.exports = (DB, type) => {
             }
         },
         latitud: {
-            type: type.BIGINT,
+            type: type.FLOAT,
         },
         longitud: {
-            type: type.BIGINT,
+            type: type.FLOAT,
         },
     }, {
         // Opción para permitir soft delete
