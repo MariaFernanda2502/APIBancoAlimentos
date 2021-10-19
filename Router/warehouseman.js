@@ -7,22 +7,42 @@ require('dotenv').config;
 
 // ----------- VISUALIZAR OPERARIOS ------------
 router.get('/datos-entrega', (req, res, next)=>{
-	DB.query( `
-        SELECT
+	const normal = DB.query( `
+    SELECT
+	id_Donation,
+	nombre,
+	apellidoMaterno,
+	apellidoPaterno,
+	folio
+    FROM (SELECT
             donations.id as id_Donation,
-			users.nombre,
-			users.apellidoMaterno,
-			users.apellidoPaterno,
-			donations.folio
+			users.nombre as nombre,
+			users.apellidoMaterno as apellidoMaterno,
+			users.apellidoPaterno as apellidoPaterno,
+			donations.folio as folio
         FROM users JOIN operators ON users.id = operators.id
         JOIN donations ON operators.id = donations.idOperador
 		JOIN delivery_donations ON donations.id = delivery_donations.idDonativo
         WHERE puesto = "Operador" AND delivery_donations.estatus = "Pendiente"
+        
+        UNION ALL
+        
+        SELECT
+            spontaneousDonations.id as id_Donation,
+            users.nombre as nombre,
+            users.apellidoMaterno as apellidoMaterno,
+            users.apellidoPaterno as apellidoPaterno,
+            spontaneousDonations.folio as folio
+        FROM users JOIN operators ON users.id = operators.id
+        JOIN spontaneousDonations ON spontaneousDonations.idOperador = operators.id
+        JOIN delivery_spontaneousDonations ON spontaneousDonations.id = delivery_spontaneousDonations.idDonativo
+        WHERE puesto = "Operador" AND delivery_spontaneousDonations.estatus = "Pendiente") as operarios
     `, {type: QueryTypes.SELECT
     })
+
 	.then((result)=>{
 		return res.status(200).json({
-			data: result
+            data: result, 
 		})
 	})
 	.catch((err)=>next(err))
