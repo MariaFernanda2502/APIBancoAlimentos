@@ -108,12 +108,12 @@ router.patch('/editar-detalles/:idBodega/:id', async (req, res, next) => {
 	const { body } = req;
 	
     try{
-		let delivery_donation = await Delivery_donation.findByPk({
-            idDonativo: id,
-            idBodega: idBodega,
+		const delivery_donation = await Delivery_donation.findOne({
+            where: {
+                idDonativo: id,
+                idBodega: idBodega,
+            }
         })
-
-        console.log(delivery_donation)
 
 		if(delivery_donation){
 			await delivery_donation.update(

@@ -87,8 +87,6 @@ router.patch('/completar-donativo/:id', async (req, res, next) => {
 	}
 })
 
-// -------------------- VER DONATIVO ---------------------
-
 // ------------------ PRÓXIMAS ENTREGAS ------------------
 router.get('/proximas-entregas/:id', (req, res, next) => {
     const { id } = req.params;
