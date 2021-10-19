@@ -10,12 +10,14 @@ router.get('/datos-entrega', (req, res, next)=>{
 	const normal = DB.query( `
     SELECT
 	id_Donation,
+    idBodega,
 	nombre,
 	apellidoMaterno,
 	apellidoPaterno,
 	folio
     FROM (SELECT
             donations.id as id_Donation,
+            delivery_donations.idBodega,
 			users.nombre as nombre,
 			users.apellidoMaterno as apellidoMaterno,
 			users.apellidoPaterno as apellidoPaterno,
@@ -29,6 +31,7 @@ router.get('/datos-entrega', (req, res, next)=>{
         
         SELECT
             spontaneousDonations.id as id_Donation,
+            delivery_spontaneousDonations.idBodega,
             users.nombre as nombre,
             users.apellidoMaterno as apellidoMaterno,
             users.apellidoPaterno as apellidoPaterno,
