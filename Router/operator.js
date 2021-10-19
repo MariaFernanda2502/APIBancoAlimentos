@@ -176,4 +176,43 @@ router.post('/login', async (req, res, next) => {
     }
 })
 
+router.get('/tiendas-espontaneas/:id', (req, res, next)=> {
+	const { id } = req.params;
+
+
+    Operator.findOne({
+        where: {
+            id: id
+        }
+    })
+		DB.query(`
+            SELECT 
+                stores.nombre,
+                stores.direccion,
+                stores.id
+
+            FROM spontaneousDonations JOIN stores ON spontaneousDonations.idTienda = stores.id
+            where idOperador = ${id}
+		`, {
+			type: QueryTypes.SELECT
+		})
+		.then((result) => {
+            if(result) {
+                return res.status(200).json({
+                    data: result
+                })
+            } else {
+            return res.status(404).json({
+                name: "Not found",
+                message: "Sorry, el usuario que buscas no existe"
+            })
+        }
+        })
+        .catch((err) => next(err))
+})
+
+
+
+
+
 module.exports = router
