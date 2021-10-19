@@ -47,6 +47,10 @@ module.exports = (DB, type) => {
                 key: 'id'
             }
         },
+        estatusOperador: {
+            type: type.ENUM,
+            values: ['Pendiente', 'Completado'],
+        },
     }, {
         // Opción para permitir soft delete
         paranoid: true
