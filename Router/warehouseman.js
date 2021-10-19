@@ -41,19 +41,27 @@ router.get('/datos-entrega', (req, res, next)=>{
     })
 
 	.then((result)=>{
-		return res.status(200).json({
-            data: result, 
-		})
+		if(result) {
+            return res.status(200).json({
+                data: result
+            })
+        } else {
+        return res.status(404).json({
+            name: "Not found",
+            message: "Sorry, esta bodega no tiene entregas pendientes"
+        })
+    }
 	})
 	.catch((err)=>next(err))
 })
 
 // ----------------- DETALLE DE ENTREGA ----------------
-router.get('/detalle-entrega/:id', (req, res, next) => {
-    const { id } = req.params;
+router.get('/detalle-entrega/:idbodega/:id', (req, res, next) => {
+    const { idbodega, id } = req.params;
 
     Donation.findOne({
         where: {
+            idbodega: idbodega,
             id: id
         }
     })
@@ -69,12 +77,14 @@ router.get('/detalle-entrega/:id', (req, res, next) => {
                 delivery_donations.kg_frutas_verduras,
                 delivery_donations.kg_pan,
                 delivery_donations.kg_abarrotes,
-                delivery_donations.kg_no_comestibles
+                delivery_donations.kg_no_comestibles,
+                delivery_donations.estatus
             FROM users JOIN operators ON users.id = operators.id
 			JOIN donations ON donations.idOperador = operators.id
 			JOIN delivery_donations ON donations.id = delivery_donations.idDonativo
 			JOIN warehouses ON delivery_donations.idBodega = warehouses.id
-            WHERE donations.id = ${id} AND donations.deletedAt IS NULL
+            WHERE donations.id = ${id} AND delivery_donations.idbodega = ${idbodega}
+            AND donations.deletedAt IS NULL
         `, { type: QueryTypes.SELECT
             })
         .then((result) => {
