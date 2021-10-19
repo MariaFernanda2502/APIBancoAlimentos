@@ -103,12 +103,17 @@ router.get('/detalle-entrega/:idbodega/:id', (req, res, next) => {
 })
 
 // ----------------- EDITAR DETALLES DE ENTREGA ----------------
-router.patch('/editar-detalles/:id', async (req, res, next) => {
-	const { id } = req.params;
+router.patch('/editar-detalles/:idBodega/:id', async (req, res, next) => {
+	const { idBodega, id } = req.params;
 	const { body } = req;
 	
     try{
-		let delivery_donation = await Delivery_donation.findByPk(id)
+		let delivery_donation = await Delivery_donation.findByPk({
+            idDonativo: id,
+            idBodega: idBodega,
+        })
+
+        console.log(delivery_donation)
 
 		if(delivery_donation){
 			await delivery_donation.update(
