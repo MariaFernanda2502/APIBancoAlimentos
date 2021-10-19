@@ -14,10 +14,10 @@ module.exports = (DB, type) => {
             type: type.STRING,
         },
         latitud: {
-            type: type.BIGINT,
+            type: type.FLOAT,
         },
         longitud: {
-            type: type.BIGINT,
+            type: type.FLOAT,
         },
         vencimiento_licencia: {
             type: type.DATE,

@@ -55,7 +55,7 @@ router.get('/datos-entrega', (req, res, next)=>{
 	.catch((err)=>next(err))
 })
 
-// ----------------- DETALLE DE ENTREGA ----------------
+// ---------------------- DETALLE DE ENTREGA ---------------------
 router.get('/detalle-entrega/:idbodega/:id', (req, res, next) => {
     const { idbodega, id } = req.params;
 
