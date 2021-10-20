@@ -159,18 +159,17 @@ router.post('/login', async (req, res, next) => {
             }
         })
 
+        if(!user) {
+            return res.status(401).json({
+                data: 'Credenciales no válidas',
+            })
+        }
         
         const operador = await Operator.findOne({
             where: {
                 id: user.id,
             }
         })
-
-        if(!user) {
-            return res.status(401).json({
-                data: 'Credenciales no válidas',
-            })
-        }
 
         return res.status(201).json({
             data: operador,

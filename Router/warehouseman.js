@@ -153,17 +153,17 @@ router.post('/login', async (req, res, next) => {
             }
         })
 
-        const almacenista = await Warehouseman.findOne({
-            where: {
-                id: user.id,
-            }
-        })
-
         if(!user) {
             return res.status(401).json({
                 data: 'Credenciales no válidas',
             })
         }
+
+        const almacenista = await Warehouseman.findOne({
+            where: {
+                id: user.id,
+            }
+        })
 
         return res.status(201).json({
             data: {
