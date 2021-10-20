@@ -19,7 +19,8 @@ module.exports = (DB, type) => {
             type: type.STRING,
             validate: {
             isEmail: true
-            }
+            },
+            unique: true,
         },
         telefonoCasa: {
             type: type.BIGINT,
@@ -35,6 +36,7 @@ module.exports = (DB, type) => {
         },
         username: {
             type: type.STRING,
+            unique: true,
         },
         contrasena: {
             type: type.STRING,
