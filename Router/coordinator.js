@@ -77,10 +77,10 @@ router.get('/detalles-entrega/:id', (req, res, next) => {
             WHERE donations.id = ${id} AND donations.deletedAt IS NULL
         `, { type: QueryTypes.SELECT
             })
-        .then((tienda) => {
-            if(tienda) {
+        .then((result) => {
+            if(result) {
                 return res.status(200).json({
-                    data: tienda
+                    data: result
                 })
             } else {
             return res.status(404).json({
@@ -206,27 +206,6 @@ router.patch('/editar-estatus-espontaneo/:id', async (req, res, next) => {
 	catch(err){
 		next(err);
 	}
-})
-
-// ------------ VER RUTAS --------------
-router.get('/rutas', (req, res, next)=>{
-	DB.query( `
-        SELECT
-            routes.id,
-            stores.direccion,
-            users.id as userid,
-            users.nombre
-        FROM routes JOIN stores ON routes.id = stores.idRuta
-        WHERE routes.deletedAt IS NULL AND routes.id = stores.idRuta
-        GROUP BY routes.id
-    `, {type: QueryTypes.SELECT
-    })
-	.then((result)=>{
-		return res.status(200).json({
-			data: result
-		})
-	})
-	.catch((err)=>next(err))
 })
 
 // --------- VISUALIZAR OPERADORES ----------
